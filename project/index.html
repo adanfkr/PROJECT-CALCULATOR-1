@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="id">
+<head>
+    <meta charset="utf-8">
+    <title>Kalkulator Python Web</title>
+    <link rel="stylesheet" href="static/style.css">
+</head>
+<body>
+    <div class="box">
+        <h1>Kalkulator Python Web</h1>
+
+        <input id="a" type="number" placeholder="Masukan value 1">
+        <input id="b" type="number" placeholder="Masukan value 2">
+
+        <select id="op">
+            <option value="1">Penjumlahan (+)</option>
+            <option value="2">Pengurangan (-)</option>
+            <option value="3">Perkalian (×)</option>
+            <option value="4">Pembagian (÷)</option>
+        </select>
+
+        <button onclick="hitung()">Hitung</button>
+
+        <div id="hasil" class="hasil">Hasil akan muncul di sini</div>
+        <div id="error" class="error"></div>
+    </div>
+
+<script>
+function hitung() {
+    const a = document.getElementById("a").value;
+    const b = document.getElementById("b").value;
+    const op = document.getElementById("op").value;
+
+    fetch("/hitung", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({ a:a, b:b, op:op })
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.error) {
+            document.getElementById("error").textContent = data.error;
+            document.getElementById("hasil").textContent = "";
+        } else {
+            document.getElementById("error").textContent = "";
+            document.getElementById("hasil").textContent = "Hasil: " + data.hasil;
+        }
+    });
+}
+</script>
+
+</body>
+</html>
